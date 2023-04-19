@@ -46,16 +46,16 @@ const FileUpload = () => {
     formData.append("file", selectedFile);
 
     try {
-      const response = await axios.post("/api/upload", formData, {
+      const response = await axios.post("http://localhost:5001/api/upload", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
-      alert("File uploaded successfully.");
+      alert("恭喜您 : ) ！！文件上传成功！！！祝您生活愉快");
       console.log("File upload response:", response.data);
     } catch (error) {
       console.error("File upload error:", error);
-      alert("Failed to upload file.");
+      alert("上传失败咚 : (");
     }
   };
 
