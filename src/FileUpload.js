@@ -38,7 +38,7 @@ const FileUpload = () => {
 
   const handleSubmit = async () => {
     if (!selectedFile) {
-      alert("Please select a file to upload.");
+      alert("请至少上传一个文件");
       return;
     }
 
