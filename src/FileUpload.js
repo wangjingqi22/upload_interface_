@@ -69,7 +69,7 @@ const FileUpload = () => {
     setLoading(true);
     try {
       // const response = await axios.post("http://localhost:5001/api/upload", formData, {
-      const response = await axios.post("https://20.243.46.110:5001/api/upload", formData, {
+      const response = await axios.post("http://20.243.46.110:5001/api/upload", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
