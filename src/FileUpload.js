@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import axios from "axios";
 import styled from "styled-components";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 const UploadContainer = styled.div`
   display: flex;
@@ -29,8 +31,27 @@ const UploadButton = styled.button`
   }
 `;
 
+const LoadingIcon = styled.div`
+  margin-top: 20px;
+  font-size: 50px;
+`;
+
+const StatusText = styled.div`
+  margin-top: 10px;
+`;
+
+const ResultBox = styled.div`
+  width: 60%;
+  margin: 20px auto;
+  border: 1px solid #ccc;
+  padding: 20px;
+`;
+
 const FileUpload = () => {
   const [selectedFile, setSelectedFile] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [result, setResult] = useState(null);
+  const [charCount, setCharCount] = useState(0);
 
   const handleFileChange = (e) => {
     setSelectedFile(e.target.files[0]);
@@ -45,17 +66,23 @@ const FileUpload = () => {
     const formData = new FormData();
     formData.append("file", selectedFile);
 
+    setLoading(true);
     try {
-      const response = await axios.post("http://localhost:5001/api/upload", formData, {
+      // const response = await axios.post("http://localhost:5001/api/upload", formData, {
+      const response = await axios.post("http://20.243.46.110:5001/api/upload", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
-      alert("恭喜您 : ) ！！文件上传成功！！！祝您生活愉快");
+      setResult(response.data);
+      setCharCount(response.data.length);
+      alert("上传成功");
       console.log("File upload response:", response.data);
     } catch (error) {
       console.error("File upload error:", error);
-      alert("上传失败咚 : (");
+      alert(`上传失败 ${error}`);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -64,8 +91,23 @@ const FileUpload = () => {
       <h2>Upload Attachment</h2>
       <input type="file" onChange={handleFileChange} />
       <UploadButton onClick={handleSubmit}>Upload</UploadButton>
+      {loading && (
+        <>
+          <LoadingIcon><FontAwesomeIcon icon={faSpinner} spin size="lg" /></LoadingIcon>
+          <StatusText>总结生成中...</StatusText>
+        </>
+      )}
+      {result && (
+        <>
+          <ResultBox>
+            <div>{result}</div>
+            <StatusText>总字数: {charCount}</StatusText>
+          </ResultBox>
+        </>
+      )}
     </UploadContainer>
   );
 };
 
 export default FileUpload;
+
